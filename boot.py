@@ -43,14 +43,20 @@ networkStatus = machine.Pin(12, machine.Pin.OUT)
 sta = network.WLAN(network.STA_IF)
 sta.active(True)
 
-if (sta.isconnected() == 0):
+count = 0;
 
+if (sta.isconnected() == 0):
+	
 	sta.connect(connInfo.essid, connInfo.pwd)
 
 	print("Trying to connect.....")
 	
 	while (sta.isconnected() == 0):	
-
+		
+		count = count + 1;
+	
+		if (count == 20): #If count reaches 20 (too much time has passed with no connection, shutdown to save battery).
+			machine.deepsleep()
 		time.sleep(0.3)
 	
 		networkStatus.value(1)
